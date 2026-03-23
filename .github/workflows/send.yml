@@ -1,25 +1,31 @@
 name: Send GIF Email
 
 on:
+  workflow_dispatch:  # запуск вручную
   schedule:
-    - cron: '0 7 * * *'
-  workflow_dispatch:
+    - cron: '0 11 * * *'  # ежедневно в 07:00 UTC
 
 jobs:
   run:
     runs-on: ubuntu-latest
 
+    env:  # передаём секреты в Python
+      EMAIL: ${{ secrets.EMAIL }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      TO_EMAIL: ${{ secrets.TO_EMAIL }}
+      GIPHY_API_KEY: ${{ secrets.GIPHY_API_KEY }}
+
     steps:
-      - name: Клонировать репозиторий
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Установить Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
-      - name: Установить зависимости
+      - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Запустить скрипт
+      - name: Run script
         run: python main.py
