@@ -1,15 +1,17 @@
 import smtplib
 import requests
+import os
 from email.mime.text import MIMEText
 from email.utils import formataddr
 
-GIPHY_API_KEY = "GIPHY_API_KEY"
-email = "EMAIL"
-password = "PASSWORD"
-to_email = "TO_EMAIL"
+# Берём данные из переменных окружения (Secrets)
+GIPHY_API_KEY = os.getenv("GIPHY_API_KEY")
+email = os.getenv("EMAIL")
+password = os.getenv("PASSWORD")
+to_email = os.getenv("TO_EMAIL")
 
+# Получаем случайную гифку
 url = "https://api.giphy.com/v1/gifs/random"
-
 params = {
     "api_key": GIPHY_API_KEY,
     "tag": "love you",
@@ -19,8 +21,14 @@ params = {
 response = requests.get(url, params=params)
 data = response.json()
 
-gif_url = data["data"]["images"]["original"]["url"]
+# Проверяем, что гифка вернулась
+if "data" in data and data["data"]:
+    gif_url = data["data"]["images"]["original"]["url"]
+else:
+    # Запасная гифка, если API ничего не вернул
+    gif_url = "https://media.giphy.com/media/14uQ3cOFteDaU/giphy.gif"
 
+# Формируем HTML письмо
 html = f"""
 <html>
   <body>
@@ -34,6 +42,7 @@ msg["Subject"] = "❤️"
 msg["From"] = formataddr(("Your pookie", email))
 msg["To"] = to_email
 
+# Отправляем письмо через Gmail
 server = smtplib.SMTP("smtp.gmail.com", 587)
 server.starttls()
 server.login(email, password)
