@@ -4,13 +4,17 @@ import os
 from email.mime.text import MIMEText
 from email.utils import formataddr
 
-# Берём данные из переменных окружения (Secrets)
-GIPHY_API_KEY = os.getenv("GIPHY_API_KEY")
+# Берём данные из Secrets
 email = os.getenv("EMAIL")
 password = os.getenv("PASSWORD")
 to_email = os.getenv("TO_EMAIL")
+GIPHY_API_KEY = os.getenv("GIPHY_API_KEY")
 
-# Получаем случайную гифку
+# Проверяем, что все секреты есть
+if not all([email, password, to_email, GIPHY_API_KEY]):
+    raise ValueError("Один или несколько секретов не настроены! Проверьте EMAIL, PASSWORD, TO_EMAIL, GIPHY_API_KEY")
+
+# Получаем случайную гифку с GIPHY
 url = "https://api.giphy.com/v1/gifs/random"
 params = {
     "api_key": GIPHY_API_KEY,
@@ -21,11 +25,11 @@ params = {
 response = requests.get(url, params=params)
 data = response.json()
 
-# Проверяем, что гифка вернулась
+# Проверяем, что API вернул данные
 if "data" in data and data["data"]:
     gif_url = data["data"]["images"]["original"]["url"]
 else:
-    # Запасная гифка, если API ничего не вернул
+    # запасная гифка
     gif_url = "https://media.giphy.com/media/14uQ3cOFteDaU/giphy.gif"
 
 # Формируем HTML письмо
