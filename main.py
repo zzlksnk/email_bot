@@ -18,7 +18,7 @@ if not all([email, password, to_email, GIPHY_API_KEY]):
 url = "https://api.giphy.com/v1/gifs/random"
 params = {
     "api_key": GIPHY_API_KEY,
-    "tag": "love you",
+    "tag": "banana",
     "rating": "pg"
 }
 
