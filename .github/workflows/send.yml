@@ -3,8 +3,8 @@ name: Send GIF Email
 on:
   workflow_dispatch:  # запуск вручную
   repository_dispatch: 
-  schedule:
-    - cron: '* * * * *'  # ежедневно в 08:00 UTC
+  # schedule:
+  #   - cron: '* * * * *'  # ежедневно в 08:00 UTC
 
 jobs:
   run:
