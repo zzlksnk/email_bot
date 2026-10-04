@@ -43,7 +43,7 @@ html = f"""
 
 msg = MIMEText(html, "html")
 msg["Subject"] = "❤️"
-msg["From"] = formataddr(("Your pookie", email))
+msg["From"] = formataddr(("Your Alex", email))
 msg["To"] = to_email
 
 # Отправляем письмо через Gmail
